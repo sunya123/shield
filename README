@@ -1,0 +1,9 @@
+distribute metadata  storage 
+
+1.use sqlite to storage metadata
+
+2.base the key range to shard 
+
+3.use trie to list object
+
+4.strong persisted
