@@ -61,8 +61,24 @@ class  TestSQLAgent(unittest.TestCase):
 		else:
 			self.assertTrue(False)
 
+	def test_executemany(self):
+		if self.agent:
+			self.agent.createDb()
+			self.agent.getCursor()
+			sql='''create table test
+                 (date text, trans text, symbol text,
+                    qty real, price real)'''
 
-		
+			self.agent.executeTable(sql)
+			sql="""insert into test values ('2006-01-05','BUY','RHAT',100,35.14)"""
+			self.agent.execute(sql)
+			sql='insert into test values(?,?,?,?,?)'
+			params=[('2006-01-07','SALE','RH',10,30.14),
+			('2006-09-07','SALE','RH',10,39.14),
+			('2006-01-08','SALE','RH',120,30.14),]
+			self.agent.executemany(sql,params)
+
+
 
 if __name__ == '__main__':
 	

@@ -46,7 +46,7 @@ class SQLAgent(object):
 
 	"""
 	def _execute(self,sql,params=None):
-		print "------start execute-----"
+		logging.debug( "------start execute-----")
 		if self._cursor:
 			logging.debug(sql)
 			if params:
@@ -98,6 +98,16 @@ class SQLAgent(object):
 			self.commit()
 		except:
 			raise  Exception('execute sql:%s failed'%(sql))
+
+	def executemany(self,sql,params):
+		try:
+			if params:
+				logging.debug("start execute sql:%s with params:%s"%(sql,params))
+				self._executemany(sql,params)
+			else:
+				raise  Exception("params is None")
+		except:
+			pass
 # def main():
 # 	sa=SQLAgent("./mydb.db")
 # 	sa.createDb()
@@ -110,5 +120,3 @@ class SQLAgent(object):
 
 # if __name__ == '__main__':
 # 		main()
-
-
