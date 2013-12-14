@@ -8,15 +8,28 @@ from sqlite import sql
 
 class  TestSQLAgent(unittest.TestCase):
 
-	def setup():
-		self.conn=SQlAgent("./mydb.db")
+	def setUp(self):
+		self.db=sql.SQLAgent("./mydb.db")
+		self.db.createDb()
+		
+	def tearDown(self):
+		self.db=None
+		os.remove("./mydb.db")
 
-	def test_creatDb():
-		if self.conn.creatDb():
-			assertNotEqual(self.conn,None)
+	def test_creatDb(self):
+		if self.db:
+			self.assertNotEqual(self.db.name,None)
+			self.assertNotEqual(self.db.createDb(),None)
+		else:
+			self.assertTrue(False)
 
-	def test_getCursor():
-		assertNotEqual(self.conn.getCursor(),None)
+	def test_getCursor(self):
+		if self.db:
+			self.assertNotEqual(self.db.getCursor(),None)
+		else:
+			self.assertTrue(False)
+
+		
 
 if __name__ == '__main__':
 	

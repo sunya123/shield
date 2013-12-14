@@ -7,7 +7,7 @@ logging.basicConfig(format='%(asctime)s %(levelname)s:%(message)s',level=logging
 class SQLAgent(object):
 	"""SqlAgent is a common interface to operate  sqlite3 database"""
 	def __init__(self,name):
-		super(SqlAgent, self).__init__()
+		super(SQLAgent, self).__init__()
 		self._conn=None
 		self._cursor=None
 		self.name=name
@@ -18,19 +18,24 @@ class SQLAgent(object):
 	@return connection object
 
 	"""
-	def createDb():
-		self.conn=sqlite3.connect(self.name)
-		if not self._conn:
+	def createDb(self):
+		self._conn=sqlite3.connect(self.name)
+		logging.debug("create database")
+		if self._conn:
 			return  self._conn
 		else:
+			logging.error("create database failed")
 			return None
 
 	"""
 	@return  get the cursor of the database
 	"""
-	def getCursor():
-		self._cursor=self.conn.cursor()
-		return self._cursor
+	def getCursor(self):
+		if self._conn:
+			self._cursor=self._conn.cursor()
+			return self._cursor
+		else:
+			raise Exception("NoneType to use")
 
 	"""
 	@param sql the sql want to execute
@@ -39,27 +44,28 @@ class SQLAgent(object):
 	@type  list
 
 	"""
-	def _execute(sql,params):
+	def _execute(self,sql,params):
 		self._cursor.execute(sql,params)
 
-	def _executemany(sql,params):
+	def _executemany(self,sql,params):
 		self._cursor.executemany(sql,params)
 
-	def commit():
+	def commit(self):
 		self._cursor.commit()
 
-	def fetchone():
+	def fetchone(self):
 		return self._cursor.fetchone()
 
-	def fetchmany():
+	def fetchmany(self):
 		return self._cursor.fetchmany()
 
-	def fetchall():
+	def fetchall(self):
 		return  self._cursor.fetchall()
 
-	def  query(sqlstring,param):
+	def  query(self,sqlstring,param):
 		self._execute(sqlstring,param)
 
-	def execute(sql,param):
+	def execute(self,sql,param):
 		self._execute(sql,param)
 		self.commit()
+
